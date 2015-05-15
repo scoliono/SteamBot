@@ -125,7 +125,7 @@ namespace SteamBot
         private bool DummyValidation(List<TradeAsset> myAssets, List<TradeAsset> theirAssets)
         {
             //compare items etc
-            if (myAssets.Count == theirAssets.Count)
+            if (myAssets.Count == 0)
             {
                 return true;
             }
