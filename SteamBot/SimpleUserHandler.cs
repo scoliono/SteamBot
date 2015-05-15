@@ -58,6 +58,10 @@ namespace SteamBot
         public override void OnTradeInit() 
         {
             SendTradeMessage("Success. Please put up your items.");
+            if (!Trade.AddItemByDefindex(142))
+            {
+                SendTradeMessage("We're out of stock on Gunslingers! But you can still donate for others.");
+            }
         }
         
         public override void OnTradeAddItem (Schema.Item schemaItem, Inventory.Item inventoryItem) {}
@@ -122,13 +126,13 @@ namespace SteamBot
                 else
                 {
                     var schemaItem = Trade.CurrentSchema.GetItem (item.Defindex);
-                    errors.Add ("Item " + schemaItem.Name + " is not a metal.");
+                    //errors.Add ("Item " + schemaItem.Name + " is not a metal.");
                 }
             }
             
             if (AmountAdded == TF2Value.Zero)
             {
-                errors.Add ("You must put up at least 1 scrap.");
+                //errors.Add ("You must put up at least 1 scrap.");
             }
             
             // send the errors
