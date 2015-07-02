@@ -14,8 +14,20 @@ namespace SteamBot
         public override void OnNewTradeOffer(TradeOffer offer)
         {
             //receiving a trade offer 
-            if (IsAdmin)
-            {
+			if (IsAdmin)
+			{
+				var myItems = offer.Items.GetMyItems();
+				var theirItems = offer.Items.GetTheirItems();
+				Log.Info("They want " + myItems.Count + " of my items.");
+				Log.Info("And I will get " +  theirItems.Count + " of their items.");
+
+				string tradeid;
+				if (offer.Accept (out tradeid)) {
+					Log.Success ("Accepted trade offer from Admin successfully : Trade ID: " + tradeid);
+				}
+			}
+			else
+			{
                 //parse inventories of bot and other partner
                 //either with webapi or generic inventory
                 //Bot.GetInventory();
@@ -41,6 +53,18 @@ namespace SteamBot
 
                     //offer.Items.AddMyItem(0, 0, 0);
                     //offer.Items.RemoveTheirItem(0, 0, 0);
+
+					foreach (var item in offer.Items.GetMyItems())
+					{
+						offer.Items.RemoveMyItem((int)item.AppId, item.ContextId, item.AssetId);
+					}
+
+					foreach (var item in offer.Items.GetTheirItems())
+					{
+						
+						offer.Items.RemoveTheirItem((int)item.AppId, item.ContextId, item.AssetId);
+					}
+
                     if (offer.Items.NewVersion)
                     {
                         string newOfferId;
@@ -49,14 +73,6 @@ namespace SteamBot
                             Log.Success("Counter offered successfully : New Offer ID: " + newOfferId);
                         }
                     }
-                }
-            }
-            else
-            {
-                //we don't know this user so we can decline
-                if (offer.Decline())
-                {
-                    Log.Info("Declined trade offer : " + offer.TradeOfferId + " from untrusted user " + OtherSID.ConvertToUInt64());
                 }
             }
         }
@@ -125,7 +141,7 @@ namespace SteamBot
         private bool DummyValidation(List<TradeAsset> myAssets, List<TradeAsset> theirAssets)
         {
             //compare items etc
-            if (myAssets.Count == 0)
+			if (myAssets.Count == 0)
             {
                 return true;
             }
