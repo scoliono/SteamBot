@@ -469,7 +469,7 @@ namespace SteamBot
                 }
 
                 SteamFriends.SetPersonaName (DisplayNamePrefix+DisplayName);
-                SteamFriends.SetPersonaState (EPersonaState.Online);
+                SteamFriends.SetPersonaState (EPersonaState.LookingToTrade);
 
                 Log.Success ("Steam Bot Logged In Completely!");
 
