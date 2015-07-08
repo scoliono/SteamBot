@@ -469,7 +469,7 @@ namespace SteamBot
                 }
 
                 SteamFriends.SetPersonaName (DisplayNamePrefix+DisplayName);
-                SteamFriends.SetPersonaState (EPersonaState.Online);
+                SteamFriends.SetPersonaState (EPersonaState.LookingToTrade);
 
                 Log.Success ("Steam Bot Logged In Completely!");
 
@@ -901,7 +901,7 @@ namespace SteamBot
             var inventory = Inventory.FetchInventory(SteamUser.SteamID, ApiKey, SteamWeb);
             if(inventory.IsPrivate)
             {
-                log.Warn("The bot's backpack is private! If your bot adds any items it will fail! Your bot's backpack should be Public.");
+                Log.Warn("The bot's backpack is private! If your bot adds any items it will fail! Your bot's backpack should be Public.");
             }
             return inventory;
         }

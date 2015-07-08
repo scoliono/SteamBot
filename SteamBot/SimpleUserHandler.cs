@@ -37,7 +37,7 @@ namespace SteamBot
         
         public override void OnMessage (string message, EChatEntryType type) 
         {
-            SendChatMessage(Bot.ChatResponse);
+            //SendChatMessage(Bot.ChatResponse);
         }
 
         public override bool OnTradeRequest() 
@@ -187,43 +187,32 @@ namespace SteamBot
 					string tradeid;
 					if (offer.Accept(out tradeid))
 					{
-						Log.Success("Accepted trade offer successfully : Trade ID: " + tradeid);
+						Log.Success("Accepted trade offer successfully from "+offer.PartnerSteamId.ToString()+" : Trade ID: " + tradeid);
 					}
 				}
 				else
 				{
-					// maybe we want different items or something
-
-					//offer.Items.AddMyItem(0, 0, 0);
-					//offer.Items.RemoveTheirItem(0, 0, 0);
-
-					foreach (var item in offer.Items.GetMyItems())
-					{
-						offer.Items.RemoveMyItem((int)item.AppId, item.ContextId, item.AssetId);
-					}
-
-					foreach (var item in offer.Items.GetTheirItems())
-					{
-
-						offer.Items.RemoveTheirItem((int)item.AppId, item.ContextId, item.AssetId);
-					}
-
-					if (offer.Items.NewVersion)
-					{
-						string newOfferId;
-						if (offer.CounterOffer(out newOfferId))
-						{
-							Log.Success("Counter offered successfully : New Offer ID: " + newOfferId);
-						}
-					}
+					if(offer.Decline()) Log.Success("Declined trade offer successfully");
 				}
 			}
 		}
 		private bool DummyValidation(List<TradeAsset> myAssets, List<TradeAsset> theirAssets)
 		{
-			//compare items etc
 			if (myAssets.Count == 0)
 			{
+				GetOtherInventory();
+				foreach (var item in theirAssets)
+				{
+					ushort i = OtherInventory.GetItem((ulong)item.AssetId).Defindex;
+					if (i == 5000 || i == 5001 || i == 5002 || i == 5021)
+					{
+						continue;
+					}
+					else
+					{
+						return false;
+					}
+				}
 				return true;
 			}
 			return false;
