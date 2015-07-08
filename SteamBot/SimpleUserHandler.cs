@@ -192,6 +192,7 @@ namespace SteamBot
 				}
 				else
 				{
+					//TODO: Correct items & send counter-offer
 					if(offer.Decline()) Log.Success("Declined trade offer successfully");
 				}
 			}
